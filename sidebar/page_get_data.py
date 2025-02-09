@@ -78,7 +78,7 @@ def render_real_estate_list():
 
     st.markdown("사용 전 [사용 설명](https://github.com/ud803/ez-naver-real-estate)을 반드시 읽어주세요.")
     st.markdown("실제 데이터와 일치하지 않을 수 있습니다. 반드시 참고용으로만 사용해주세요.")
-    
+
     _, col = st.columns([8, 3])
 
     with st.form(key='estate_form'):
@@ -179,6 +179,9 @@ def render_real_estate_list():
             df = df[[i for i in column_map.keys() if i in df.columns]]
             df = df.rename(columns=column_map)
 
+            df["dealOrWarrantPrc"] = df["dealOrWarrantPrc"].astype(int)
+            if "rentPrc" in df.columns:
+                df["rentPrc"] = df["rentPrc"].astype(int)
             df["latitude"] = df["latitude"].astype(float)
             df["longitude"] = df["longitude"].astype(float)
 
