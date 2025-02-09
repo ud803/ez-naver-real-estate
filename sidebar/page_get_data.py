@@ -76,8 +76,9 @@ def get_real_estate_data(params):
 
 def render_real_estate_list():
 
-    st.markdown("사용 전 [사용 설명](https://github.com/ud803/ez-naver-real-estate)을 반드시 읽어주세요.")
-    st.markdown("실제 데이터와 일치하지 않을 수 있습니다. 반드시 참고용으로만 사용해주세요.")
+    st.markdown("- 사용 전 [사용 설명](https://github.com/ud803/ez-naver-real-estate)을 반드시 읽어주세요.")
+    st.markdown("- 조회되는 모든 내용은 네이버 부동산의 자산입니다.")
+    st.markdown("- :red[**실제 데이터와 일치하지 않는 경우가 있습니다. 참고용으로만 사용해주세요.**]")
 
     _, col = st.columns([8, 3])
 
@@ -108,8 +109,8 @@ def render_real_estate_list():
             }
             trade_type = ':'.join([trade_map[i] for i in trade_type])
 
-        warrant_price = st.slider("보증금(만원)", value=(0, 5500), min_value=0, max_value=100000, step=100)
-        rent_price = st.slider("월세(만원)", value=(0, 65), min_value=0, max_value=500, step=10)
+        warrant_price = st.slider("보증금(만원)", value=(0, 5500), min_value=0, max_value=50000, step=100)
+        rent_price = st.slider("월세(만원)", value=(0, 65), min_value=0, max_value=200, step=10)
         min_area = st.slider("최소 전용면적(㎡)", value=27, min_value=0, max_value=100, step=1)
 
         col1, col2 = st.columns(2)
@@ -192,7 +193,7 @@ def render_real_estate_list():
                 st.session_state['real_estate_df'] = df
     
     if 'real_estate_df' in st.session_state:
-        st.dataframe(st.session_state['real_estate_df'])
+        st.dataframe(st.session_state['real_estate_df'].sort_index())
 
         col1, col2 = st.columns([8, 2])
 
