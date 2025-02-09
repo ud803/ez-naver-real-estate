@@ -176,14 +176,15 @@ def render_real_estate_list():
                 ,"tradeCheckedByOwner": "집주인확인"
             }
 
-            df = df[[i for i in column_map.keys() if i in df.columns]]
-            df = df.rename(columns=column_map)
-
             df["dealOrWarrantPrc"] = df["dealOrWarrantPrc"].astype(int)
             if "rentPrc" in df.columns:
                 df["rentPrc"] = df["rentPrc"].astype(int)
             df["latitude"] = df["latitude"].astype(float)
             df["longitude"] = df["longitude"].astype(float)
+            
+            df = df[[i for i in column_map.keys() if i in df.columns]]
+            df = df.rename(columns=column_map)
+
 
             st.session_state['real_estate_df'] = df
     
