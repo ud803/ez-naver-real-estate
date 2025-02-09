@@ -142,51 +142,54 @@ def render_real_estate_list():
 
             df = pd.DataFrame.from_dict(data)
 
-            cond_1 = df['area2'] >= min_area
-            cond_2 = ~df["floorInfo"].apply(lambda x: x.split('/')[0]).isin(exclude_floors)
-            cond_3 = ~df["tagList"].apply(lambda x: any([tag in x for tag in exclude_tags])) 
+            if df.empty:
+                del st.session_state['real_estate_df']
 
-            df = df[cond_1 & cond_2 & cond_3]
+            if not df.empty:
+                cond_1 = df['area2'] >= min_area
+                cond_2 = ~df["floorInfo"].apply(lambda x: x.split('/')[0]).isin(exclude_floors)
+                cond_3 = ~df["tagList"].apply(lambda x: any([tag in x for tag in exclude_tags])) 
 
-            st.info(f"총 매물 {len(articles)}개.. 조건에 맞는 매물 {len(df)}개")
+                df = df[cond_1 & cond_2 & cond_3]
 
-            column_map = {
-                "articleNo": "articleNo"
-                # ,"articleStatus":
-                # ,"realEstateTypeName": "중분류"
-                ,"articleName": "소분류"
-                ,"tradeTypeName": "거래유형"
-                ,"floorInfo": "층수"
-                ,"dealOrWarrantPrc": "보증금"
-                ,"rentPrc"  : "월세"
-                # ,"priceChangeState" : "가격변동"
-                ,"area1": "공용면적"
-                ,"area2": "전용면적"
-                ,"direction": "방향"
-                ,"articleFeatureDesc": "특징"
-                ,"tagList": "태그"
-                # ,"sameAddrMaxPrc": "동일주소 최고가"
-                # ,"sameAddrMinPrc": "동일주소 최저가"
-                ,"cpName": "출처"
-                ,"cpPcArticleUrl": "링크"
-                ,"latitude": "latitude"
-                ,"longitude": "longitude"
-                ,"articleConfirmYmd": "확인일자"
-                ,"realtorName": "부동산"
-                ,"tradeCheckedByOwner": "집주인확인"
-            }
+                st.info(f"총 매물 {len(articles)}개.. 조건에 맞는 매물 {len(df)}개")
 
-            df["dealOrWarrantPrc"] = df["dealOrWarrantPrc"].astype(int)
-            if "rentPrc" in df.columns:
-                df["rentPrc"] = df["rentPrc"].astype(int)
-            df["latitude"] = df["latitude"].astype(float)
-            df["longitude"] = df["longitude"].astype(float)
-            
-            df = df[[i for i in column_map.keys() if i in df.columns]]
-            df = df.rename(columns=column_map)
+                column_map = {
+                    "articleNo": "articleNo"
+                    # ,"articleStatus":
+                    # ,"realEstateTypeName": "중분류"
+                    ,"articleName": "소분류"
+                    ,"tradeTypeName": "거래유형"
+                    ,"floorInfo": "층수"
+                    ,"dealOrWarrantPrc": "보증금"
+                    ,"rentPrc"  : "월세"
+                    # ,"priceChangeState" : "가격변동"
+                    ,"area1": "공용면적"
+                    ,"area2": "전용면적"
+                    ,"direction": "방향"
+                    ,"articleFeatureDesc": "특징"
+                    ,"tagList": "태그"
+                    # ,"sameAddrMaxPrc": "동일주소 최고가"
+                    # ,"sameAddrMinPrc": "동일주소 최저가"
+                    ,"cpName": "출처"
+                    ,"cpPcArticleUrl": "링크"
+                    ,"latitude": "latitude"
+                    ,"longitude": "longitude"
+                    ,"articleConfirmYmd": "확인일자"
+                    ,"realtorName": "부동산"
+                    ,"tradeCheckedByOwner": "집주인확인"
+                }
+
+                df["dealOrWarrantPrc"] = df["dealOrWarrantPrc"].apply(lambda x: x.replace(',', '')).astype('int')
+
+                df["latitude"] = df["latitude"].astype(float)
+                df["longitude"] = df["longitude"].astype(float)
+
+                df = df[[i for i in column_map.keys() if i in df.columns]]
+                df = df.rename(columns=column_map)
 
 
-            st.session_state['real_estate_df'] = df
+                st.session_state['real_estate_df'] = df
     
     if 'real_estate_df' in st.session_state:
         st.dataframe(st.session_state['real_estate_df'])
