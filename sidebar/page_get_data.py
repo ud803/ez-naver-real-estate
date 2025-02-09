@@ -76,6 +76,7 @@ def get_real_estate_data(params):
 
 def render_real_estate_list():
 
+    st.markdown("사용 전 [사용 설명](https://github.com/ud803/ez-naver-real-estate)을 반드시 읽어주세요.")
     _, col = st.columns([8, 3])
 
     with st.form(key='estate_form'):
